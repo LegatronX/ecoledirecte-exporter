@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoleDirecte Exporter - Application</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .main-content {
+            padding: 40px;
+        }
+
+        .demo-section {
+            background: #e8f5e8;
+            border: 2px solid #4caf50;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .demo-section h3 {
+            color: #2e7d32;
+            margin-bottom: 15px;
+        }
+
+        .login-form {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        input[type="text"], input[type="password"], select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e1e8ed;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .export-options {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .export-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .export-card {
+            background: white;
+            border: 2px solid #e1e8ed;
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .export-card:hover {
+            border-color: #667eea;
+            transform: translateY(-3px);
+        }
+
+        .export-card.selected {
+            border-color: #667eea;
+            background: #f3f4ff;
+        }
+
+        .results-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+        }
+
+        .download-btn {
+            background: white;
+            border: 2px solid #667eea;
+            color: #667eea;
+            padding: 12px 20px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            text-align: center;
+            transition: all 0.3s ease;
+            display: block;
+            margin: 10px 0;
+        }
+
+        .download-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .status {
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 10px;
+            font-weight: 500;
+        }
+
+        .status.success {
+            background: #e8f5e8;
+            color: #2e7d32;
+            border-left: 4px solid #2e7d32;
+        }
+
+        .status.error {
+            background: #ffebee;
+            color: #c62828;
+            border-left: 4px solid #c62828;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin: 10px;
+            display: inline-block;
+            min-width: 100px;
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+            .main-content {
+                padding: 20px;
+            }
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 EcoleDirecte Exporter</h1>
+            <p>Exportez vos données scolaires vers Notion, iCloud et plus encore</p>
+        </div>
+
+        <div class="main-content">
+            <!-- Section de démonstration -->
+            <div class="demo-section">
+                <h3>🎯 Mode Démonstration</h3>
+                <p>Testez l'interface et les fonctionnalités d'export avec des données fictives réalistes.</p>
+                <button class="btn" onclick="startDemo()" style="margin-top: 15px; width: auto; padding: 10px 20px;">
+                    Lancer la démonstration
+                </button>
+            </div>
+
+            <!-- Étape 1: Connexion -->
+            <div id="login-section">
+                <div class="login-form">
+                    <h2 style="margin-bottom: 20px; color: #333;">🔐 Connexion EcoleDirecte</h2>
+                    
+                    <div class="form-group">
+                        <label for="username">Nom d'utilisateur</label>
+                        <input type="text" id="username" placeholder="Entrez votre identifiant" value="pierre.martin">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Mot de passe</label>
+                        <input type="password" id="password" placeholder="Entrez votre mot de passe" value="motdepasse123">
+                    </div>
+
+                    <button class="btn" onclick="startLogin()">Se connecter</button>
+                </div>
+            </div>
+
+            <!-- Étape 2: Sélection d'export -->
+            <div id="export-section" class="hidden">
+                <div class="export-options">
+                    <h2 style="margin-bottom: 15px; color: #333;">📤 Options d'export</h2>
+                    
+                    <div class="export-grid">
+                        <div class="export-card selected" data-format="json" onclick="toggleExportFormat('json')">
+                            <h3>📄 JSON</h3>
+                            <p>Données complètes structurées</p>
+                        </div>
+                        
+                        <div class="export-card" data-format="csv" onclick="toggleExportFormat('csv')">
+                            <h3>📊 CSV</h3>
+                            <p>Compatible Excel/Sheets</p>
+                        </div>
+                        
+                        <div class="export-card selected" data-format="icalendar" onclick="toggleExportFormat('icalendar')">
+                            <h3>📅 iCalendar</h3>
+                            <p>Pour calendriers</p>
+                        </div>
+                        
+                        <div class="export-card selected" data-format="notion" onclick="toggleExportFormat('notion')">
+                            <h3>🗂️ Notion</h3>
+                            <p>Bases de données</p>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 25px;">
+                        <label for="period">Période à exporter</label>
+                        <select id="period">
+                            <option value="current_month" selected>Mois actuel</option>
+                            <option value="current_week">Semaine actuelle</option>
+                            <option value="current_term">Trimestre actuel</option>
+                        </select>
+                    </div>
+
+                    <button class="btn" onclick="startExport()" style="margin-top: 20px;">
+                        Commencer l'export
+                    </button>
+                </div>
+            </div>
+
+            <!-- Résultats -->
+            <div id="results-section" class="results-section hidden">
+                <h2 style="margin-bottom: 20px; color: #333;">✅ Export terminé</h2>
+                <div id="data-summary"></div>
+                <div id="download-links"></div>
+            </div>
+
+            <!-- Messages -->
+            <div id="status-messages"></div>
+        </div>
+    </div>
+
+    <script>
+        let selectedFormats = new Set(['json', 'icalendar', 'notion']);
+        let demoMode = false;
+
+        function showStatus(message, type = 'success') {
+            const statusDiv = document.getElementById('status-messages');
+            statusDiv.innerHTML = `<div class="status ${type}">${message}</div>`;
+            setTimeout(() => statusDiv.innerHTML = '', 5000);
+        }
+
+        function toggleExportFormat(format) {
+            const card = document.querySelector(`[data-format="${format}"]`);
+            if (selectedFormats.has(format)) {
+                selectedFormats.delete(format);
+                card.classList.remove('selected');
+            } else {
+                selectedFormats.add(format);
+                card.classList.add('selected');
+            }
+        }
+
+        function showSection(sectionId) {
+            ['login-section', 'export-section', 'results-section'].forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+            });
+            document.getElementById(sectionId).classList.remove('hidden');
+        }
+
+        function startDemo() {
+            demoMode = true;
+            showStatus('🎭 Mode démonstration activé - données fictives', 'success');
+            setTimeout(() => {
+                showStatus('✅ Connexion simulée réussie !', 'success');
+                showSection('export-section');
+            }, 1000);
+        }
+
+        async function startLogin() {
+            if (!demoMode) {
+                showStatus('❌ Connexion impossible (restriction CORS). Utilisez la démonstration.', 'error');
+                return;
+            }
+            startDemo();
+        }
+
+        async function startExport() {
+            if (!demoMode) {
+                showStatus('Utilisez d\'abord le mode démonstration', 'error');
+                return;
+            }
+
+            if (selectedFormats.size === 0) {
+                showStatus('Sélectionnez au moins un format', 'error');
+                return;
+            }
+
+            showStatus('Export en cours...', 'success');
+            
+            setTimeout(() => {
+                const demoData = {
+                    devoirs: Array.from({length: 15}, (_, i) => ({
+                        date: new Date(Date.now() + i * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                        matiere: ['Mathématiques', 'Français', 'Anglais', 'Histoire'][i % 4],
+                        contenu: `Devoir ${i + 1} - Exercices à faire`
+                    })),
+                    cours: Array.from({length: 20}, () => ({})),
+                    notes: Array.from({length: 12}, () => ({}))
+                };
+
+                generateExports(demoData);
+            }, 2000);
+        }
+
+        function generateExports(data) {
+            const exports = {};
+
+            if (selectedFormats.has('json')) {
+                const content = JSON.stringify(data, null, 2);
+                exports.json = { filename: 'ecoledirecte_demo.json', content, type: 'application/json' };
+            }
+
+            if (selectedFormats.has('csv')) {
+                let csv = 'Type,Date,Matiere,Contenu\\n';
+                data.devoirs.forEach(d => {
+                    csv += `Devoir,"${d.date}","${d.matiere}","${d.contenu}"\\n`;
+                });
+                exports.csv = { filename: 'ecoledirecte_demo.csv', content: csv, type: 'text/csv' };
+            }
+
+            if (selectedFormats.has('icalendar')) {
+                let ical = 'BEGIN:VCALENDAR\\nVERSION:2.0\\nPRODID:-//Demo//FR\\n';
+                data.devoirs.forEach(d => {
+                    const date = d.date.replace(/-/g, '');
+                    ical += `BEGIN:VEVENT\\nUID:${Date.now()}\\nDTSTART;VALUE=DATE:${date}\\nSUMMARY:${d.matiere}\\nDESCRIPTION:${d.contenu}\\nEND:VEVENT\\n`;
+                });
+                ical += 'END:VCALENDAR';
+                exports.icalendar = { filename: 'ecoledirecte_demo.ics', content: ical, type: 'text/calendar' };
+            }
+
+            if (selectedFormats.has('notion')) {
+                const notion = {
+                    databases: {
+                        devoirs: {
+                            title: "Devoirs",
+                            data: data.devoirs.map(d => ({
+                                Titre: `${d.matiere} - ${d.date}`,
+                                Matière: d.matiere,
+                                Date: d.date,
+                                Contenu: d.contenu
+                            }))
+                        }
+                    }
+                };
+                exports.notion = { filename: 'ecoledirecte_demo_notion.json', content: JSON.stringify(notion, null, 2), type: 'application/json' };
+            }
+
+            displayResults(data, exports);
+        }
+
+        function displayResults(data, exports) {
+            document.getElementById('data-summary').innerHTML = `
+                <div style="text-align: center;">
+                    <h4>📊 Données extraites (démonstration)</h4>
+                    <div style="margin-top: 15px;">
+                        <div class="stat-item">
+                            <div class="stat-number">${data.devoirs.length}</div>
+                            <div>Devoirs</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">${data.cours.length}</div>
+                            <div>Cours</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">${data.notes.length}</div>
+                            <div>Notes</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            let downloadsHTML = '<h4>📥 Téléchargements :</h4>';
+            Object.entries(exports).forEach(([format, fileData]) => {
+                const blob = new Blob([fileData.content], { type: fileData.type });
+                const url = URL.createObjectURL(blob);
+                
+                const formatNames = {
+                    json: '📄 JSON',
+                    csv: '📊 CSV', 
+                    icalendar: '📅 iCalendar',
+                    notion: '🗂️ Notion'
+                };
+
+                downloadsHTML += `
+                    <a href="${url}" download="${fileData.filename}" class="download-btn">
+                        ${formatNames[format]} - ${fileData.filename}
+                    </a>
+                `;
+            });
+
+            document.getElementById('download-links').innerHTML = downloadsHTML;
+            showSection('results-section');
+            showStatus('✅ Export terminé avec succès!', 'success');
+        }
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            ['json', 'icalendar', 'notion'].forEach(format => {
+                document.querySelector(`[data-format="${format}"]`).classList.add('selected');
+            });
+        });
+    </script>
+</body>
+</html>
