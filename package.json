@@ -1,0 +1,33 @@
+{
+  "name": "ecoledirecte-exporter",
+  "version": "1.0.0",
+  "description": "Application web pour exporter les données EcoleDirecte vers Notion, iCloud et autres services",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "serve": "node server.js"
+  },
+  "keywords": [
+    "ecoledirecte",
+    "export",
+    "notion",
+    "icalendar",
+    "education",
+    "school",
+    "france"
+  ],
+  "author": "LegatronX",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/LegatronX/ecoledirecte-exporter.git"
+  },
+  "bugs": {
+    "url": "https://github.com/LegatronX/ecoledirecte-exporter/issues"
+  },
+  "homepage": "https://github.com/LegatronX/ecoledirecte-exporter#readme"
+}
